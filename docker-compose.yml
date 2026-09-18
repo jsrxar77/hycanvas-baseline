@@ -1,0 +1,58 @@
+name: hycanvas
+
+services:
+  hycanvas_db:
+    image: postgres:16-alpine
+    container_name: hycanvas_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-hycanvas_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-HyCanvasSecurePass2026!}
+      POSTGRES_DB: ${POSTGRES_DB:-hycanvas_db}
+    volumes:
+      - hycanvas_pgdata:/var/lib/postgresql/data
+    networks:
+      - hycanvas_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-hycanvas_user} -d ${POSTGRES_DB:-hycanvas_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+      start_period: 10s
+
+  hycanvas_app:
+    image: hycanvas/hycanvas:latest
+    container_name: hycanvas_app
+    restart: unless-stopped
+    depends_on:
+      hycanvas_db:
+        condition: service_healthy
+    ports:
+      - "${APP_PORT:-8088}:8005"
+    env_file:
+      - path: .env
+        required: true
+    environment:
+      NODE_ENV: production
+      PORT: "8005"
+      DB_AUTO_MIGRATE: "true"
+      COOKIE_SECURE: ${COOKIE_SECURE:-true}
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-hycanvas_user}:${POSTGRES_PASSWORD:-HyCanvasSecurePass2026!}@hycanvas_db:5432/${POSTGRES_DB:-hycanvas_db}?schema=public"
+      REDIS_URL: ""
+      STORAGE_DRIVER: ${STORAGE_DRIVER:-local}
+      LOCAL_STORAGE_PATH: /app/.data/storage
+      APP_URL: ${APP_URL:-https://hycanvas.holospace.com.ar}
+      FRONTEND_URL: ${FRONTEND_URL:-https://hycanvas.holospace.com.ar}
+    volumes:
+      - ./data/storage:/app/.data/storage
+    networks:
+      - hycanvas_network
+
+networks:
+  hycanvas_network:
+    name: hycanvas_network
+    driver: bridge
+
+volumes:
+  hycanvas_pgdata:
+    name: hycanvas_pgdata
