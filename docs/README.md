@@ -35,9 +35,10 @@ El **único** usuario facultado para crear/administrar tenants, otorgar licencia
 ### Satélite HyCanvas (Plataforma de Diseño Visual & MCP)
 Instancia independiente de diseño asistido por IA (`https://hycanvas.holospace.com.ar` / `http://localhost:8088`):
 
-| Rol Workspace | Workspace | Email Oficial | Estado | Propósito / Acceso |
+| Workspace | Tipo / Ámbito | Propietario / Admin | API Key Prefix | Propósito / Alcance |
 |---|---|---|---|---|
-| **OWNER / ADMIN** | `Hologrowth Workspace` | `javier@hologrowth.dev` | Activo / Verificado | Control total del Workspace, administración de miembros, emisión de API Keys y Servidor MCP (`/mcp`). |
+| **`Javier Workspace`** | **Personal** | `javier@hologrowth.dev` | `hyk_tMoqlTog...` | Espacio privado de diseño individual y generación personal. |
+| **`Hologrowth Workspace`** | **Team / Equipo** | `javier@hologrowth.dev` | `hyk_ZvP7d7SR...` | Espacio colaborativo de equipo, miembros, marcas (Brand Kits) y proyectos compartidos. |
 
 ---
 
