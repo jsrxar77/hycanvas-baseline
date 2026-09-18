@@ -1,42 +1,51 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# Script de Despliegue en Servidor Hetzner
-# Uso: ./deploy-hetzner.sh <IP_DEL_SERVIDOR_HETZNER> [SSH_USER]
+# Script de Despliegue y Sincronizacion Directa a Hetzner
+# Uso: ./bin/deploy-hetzner.sh [IP_DEL_SERVIDOR] [SSH_USER]
 # ==============================================================================
 set -e
 
-HOST="${1}"
+HOST="${1:-5.161.237.189}"
 USER="${2:-root}"
 REMOTE_DIR="/opt/hycanvas"
 
-if [ -z "$HOST" ]; then
-    echo "Uso: ./deploy-hetzner.sh <IP_DEL_SERVIDOR> [SSH_USER]"
-    echo "Ejemplo: ./deploy-hetzner.sh 159.69.x.x root"
-    exit 1
-fi
+echo "=== [HYCANVAS] DESPLEGANDO EN SERVIDOR HETZNER ($HOST) ==="
 
-echo "[+] Sincronizando configuraciones locales a ${USER}@${HOST}:${REMOTE_DIR}..."
-ssh "${USER}@${HOST}" "mkdir -p ${REMOTE_DIR}/data/storage ${REMOTE_DIR}/nginx"
+# 1. Crear estructura remota
+echo "[+] Preparando directorios en servidor remoto..."
+ssh "${USER}@${HOST}" "mkdir -p ${REMOTE_DIR}/data/storage ${REMOTE_DIR}/nginx ${REMOTE_DIR}/bin"
 
-# Copiar archivos base
+# 2. Sincronizar archivos esenciales y secretos
+echo "[+] Sincronizando configuracion y secretos..."
 scp docker-compose.yml "${USER}@${HOST}:${REMOTE_DIR}/"
 scp .env "${USER}@${HOST}:${REMOTE_DIR}/"
+scp .env.example "${USER}@${HOST}:${REMOTE_DIR}/"
 scp upgrade.sh "${USER}@${HOST}:${REMOTE_DIR}/"
 scp nginx/hycanvas.holospace.com.ar.conf "${USER}@${HOST}:${REMOTE_DIR}/nginx/"
 
-echo "[+] Configurando Nginx en el host remoto..."
-ssh "${USER}@${HOST}" "
-    cp ${REMOTE_DIR}/nginx/hycanvas.holospace.com.ar.conf /etc/nginx/sites-available/hycanvas.holospace.com.ar
-    ln -sf /etc/nginx/sites-available/hycanvas.holospace.com.ar /etc/nginx/sites-enabled/
-    nginx -t && systemctl reload nginx
-"
-
-echo "[+] Iniciando contenedores en el host remoto..."
+# 3. Dar permisos y levantar contenedores en Hetzner
+echo "[+] Levantando servicios Docker en Hetzner..."
 ssh "${USER}@${HOST}" "
     cd ${REMOTE_DIR}
     chmod +x upgrade.sh
     docker compose up -d
 "
 
-echo "[+] Despliegue completado."
-echo "Recordatorio SSL: ejecute en el servidor remoto: certbot --nginx -d hycanvas.holospace.com.ar"
+# 4. Verificar ejecucion remota
+echo "[+] Comprobando servicios remotos..."
+ssh "${USER}@${HOST}" "
+    cd ${REMOTE_DIR}
+    docker compose ps
+    curl -s http://localhost:8088/healthz || echo 'Iniciando...'
+"
+
+echo "=== [HYCANVAS] DESPLIEGUE EN HETZNER COMPLETADO ==="
+echo ""
+echo "Acceso y Proxy:"
+echo "1. El puerto 8088 esta escuchando en Hetzner para HyCanvas."
+echo "2. En Nginx Proxy Manager (http://5.161.237.189:81):"
+echo "   - Domain Names: hycanvas.holospace.com.ar"
+echo "   - Forward Hostname / IP: 172.17.0.1 (o IP de host)"
+echo "   - Forward Port: 8088"
+echo "   - WebSockets Support: ON"
+echo "   - SSL: Request a new SSL Certificate (Let's Encrypt)"

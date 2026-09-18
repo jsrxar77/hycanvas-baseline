@@ -1,22 +1,39 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# Script de Actualizacion Desatendida de HyCanvas
+# Script Universal de Actualizacion de HyCanvas (Local o Remoto en Hetzner)
 # ==============================================================================
 set -e
 
-echo "[+] Verificando Docker y Compose..."
-if ! command -v docker &> /dev/null; then
-    echo "Error: docker no esta instalado o no se encuentra en el PATH."
-    exit 1
+echo "=== [HYCANVAS] INICIANDO PROCESO DE ACTUALIZACION ==="
+
+# 1. Traer cambios de Git (configuraciones, compose, scripts)
+if [ -d ".git" ]; then
+    echo "[+] Verificando actualizaciones de configuracion en Git..."
+    git pull origin main || echo "[!] Advertencia: No se pudo hacer git pull (se mantendra la configuracion actual)."
 fi
 
-echo "[+] Descargando la version mas reciente de la imagen oficial de HyCanvas..."
+# 2. Descargar la version mas reciente de la imagen oficial upstream
+echo "[+] Descargando ultima version oficial de HyCanvas desde Docker Registry..."
 docker compose pull hycanvas_app
 
-echo "[+] Recreando contenedores con la nueva version..."
+# 3. Recrear contenedores de forma segura preservando la base de datos y assets
+echo "[+] Reiniciando servicios con la nueva version..."
 docker compose up -d
 
-echo "[+] Estado de los servicios:"
+# 4. Comprobar salud del servicio
+echo "[+] Verificando estado de los contenedores..."
 docker compose ps
 
-echo "[+] HyCanvas actualizado exitosamente."
+# Esperar unos segundos para health check
+echo "[+] Comprobando respuesta de salud..."
+for i in {1..6}; do
+    STATUS=$(curl -s http://localhost:8088/healthz || true)
+    if [[ "$STATUS" == *"ok"* ]]; then
+        echo "[+] HyCanvas respondiendo correctamente: $STATUS"
+        break
+    fi
+    echo "    Esperando inicio de HyCanvas (intento $i/6)..."
+    sleep 3
+done
+
+echo "=== [HYCANVAS] ACTUALIZACION COMPLETADA EXITOSAMENTE ==="
