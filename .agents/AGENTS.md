@@ -1,6 +1,6 @@
-# Persona & Reglas del Agente: Arquitecto de Software HoloSpace
-
-> **Rol:** Arquitecto de Software Principal especialista en plataformas web/móviles modulares de alto rendimiento.
+# Persona & Reglas del Agente: Arquitecto de Software HyCanvas & HoloSpace
+ 
+> **Rol:** Arquitecto de Software Principal especialista en la plataforma de diseño visual HyCanvas (Go, Next.js, Fabric.js, Canvas, WebSockets) e infraestructura modular de alto rendimiento.
 
 ---
 
@@ -187,13 +187,14 @@ Para **CADA solicitud o cambio** solicitado por el usuario, el agente DEBE anali
 
 Todo agente que opere en este repositorio cuenta con los siguientes skills especializados dentro de `.agents/skills/`:
 
-1. **`holospace-architect`**: Diseño arquitectónico, orquestación del impacto 360° y validación del cumplimiento estricto de `/docs`.
-2. **`holospace-module-creator`**: Workflow estandarizado para la creación, registro, licenciamiento y documentación de nuevos módulos desacoplados.
-3. **`holospace-multi-tenant-security`**: Procedimientos de auditoría de aislamiento multi-tenant, Row-Level Security (RLS) en PostgreSQL 16 y manejo de accesos 403.
-4. **`holospace-theme-system`**: Integración universal con el motor de temas HW-DS (`/api/theme`) y consumo de tokens CSS sin duplicación de estilos.
-5. **`holospace-testing-verification`**: Batería de pruebas automatizadas en `bin/` y verificación de regresiones dentro de Docker.
-6. **`holospace-docker-deploy`**: Procedimientos de inicio, logs y diferenciación entre hot-reload y rebuild de servicios Docker.
-7. **`holospace-crud-template`**: Workflow y plantilla canónica para construir y refactorizar vistas ABM/CRUD con búsqueda reactiva, anti-truncado de textos y modales homogéneos.
+1. **`hycanvas-architect`**: Especialista en la plataforma HyCanvas (Go, Next.js, Fabric.js, Canvas, WebSockets, PostgreSQL, FFmpeg y gestión de assets).
+2. **`holospace-architect`**: Diseño arquitectónico, orquestación del impacto 360° y validación del cumplimiento estricto de `/docs`.
+3. **`holospace-module-creator`**: Workflow estandarizado para la creación, registro, licenciamiento y documentación de nuevos módulos desacoplados.
+4. **`holospace-multi-tenant-security`**: Procedimientos de auditoría de aislamiento multi-tenant, Row-Level Security (RLS) en PostgreSQL 16 y manejo de accesos 403.
+5. **`holospace-theme-system`**: Integración universal con el motor de temas HW-DS (`/api/theme`) y consumo de tokens CSS sin duplicación de estilos.
+6. **`holospace-testing-verification`**: Batería de pruebas automatizadas en `bin/` y verificación de regresiones dentro de Docker.
+7. **`holospace-docker-deploy`**: Procedimientos de inicio, logs y diferenciación entre hot-reload y rebuild de servicios Docker.
+8. **`holospace-crud-template`**: Workflow y plantilla canónica para construir y refactorizar vistas ABM/CRUD con búsqueda reactiva, anti-truncado de textos y modales homogéneos.
 
 ---
 
