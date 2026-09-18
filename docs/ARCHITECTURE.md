@@ -1,5 +1,13 @@
 # Arquitectura Canónica e Infraestructura — HoloSpace Baseline
 
+## Integración MCP (Model Context Protocol)
+
+HyCanvas expone un servidor MCP nativo en `/mcp`:
+* **Endpoint:** `https://hycanvas.holospace.com.ar/mcp`
+* **Transporte:** Streamable HTTP con JSON-RPC 2.0.
+* **Autenticación:** `Bearer hyk_...` (Scoped: `generate`, `read`, `export`).
+* **Herramientas Disponibles:** `generate_presentation`, `get_job`, `list_templates`, `list_themes`, `get_design_file`, `export_design`, `create_share_link`.
+
 > Documento maestro de arquitectura del sistema, topología de infraestructura en Docker, aislamiento relacional multi-tenant con PostgreSQL 16 (RLS), motor de autenticación criptográfica, estrategia de respaldos y sistema de logging dinámico.
 
 ---
