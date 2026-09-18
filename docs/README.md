@@ -32,6 +32,15 @@ El **único** usuario facultado para crear/administrar tenants, otorgar licencia
 
 ---
 
+### Satélite HyCanvas (Plataforma de Diseño Visual & MCP)
+Instancia independiente de diseño asistido por IA (`https://hycanvas.holospace.com.ar` / `http://localhost:8088`):
+
+| Rol Workspace | Workspace | Email Oficial | Estado | Propósito / Acceso |
+|---|---|---|---|---|
+| **OWNER / ADMIN** | `Hologrowth Workspace` | `javier@hologrowth.dev` | Activo / Verificado | Control total del Workspace, administración de miembros, emisión de API Keys y Servidor MCP (`/mcp`). |
+
+---
+
 ### Nivel 2: Organizaciones Clientes (Tenants Aislados)
 Cada empresa solo administra a sus propios usuarios y opera exclusivamente dentro de su tenant:
 
